@@ -9,8 +9,6 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import food.repository.FoodRepository;
 import food.service.FoodService;
 import food.service.dto.FoodDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import web.rest.errors.BadRequestAlertException;
 import web.util.HeaderUtil;
 import web.util.ResponseUtil;
@@ -35,23 +35,18 @@ import web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
+@RequiredArgsConstructor
 public class FoodResource {
-
-	private final Logger log = LoggerFactory.getLogger(FoodResource.class);
 
 	private static final String ENTITY_NAME = "food";
 
-	@Value("${amsdams.clientApp.name}")
+	@Value("${amsdams.clientApp.name}:bla")
 	private String applicationName;
 
 	private final FoodService foodService;
 
 	private final FoodRepository foodRepository;
-
-	public FoodResource(FoodService foodService, FoodRepository foodRepository) {
-		this.foodService = foodService;
-		this.foodRepository = foodRepository;
-	}
 
 	/**
 	 * {@code POST  /foods} : Create a new food.

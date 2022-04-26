@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.Data;
+
 @RestController
 @RequestMapping("/api/exception-translator-test")
 public class ExceptionTranslatorTestController {
@@ -44,19 +46,14 @@ public class ExceptionTranslatorTestController {
 	public void internalServerError() {
 		throw new RuntimeException();
 	}
-
+	
+	@Data
 	public static class TestDTO {
 
 		@NotNull
 		private String test;
 
-		public String getTest() {
-			return test;
-		}
-
-		public void setTest(String test) {
-			this.test = test;
-		}
+		
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "test response status")

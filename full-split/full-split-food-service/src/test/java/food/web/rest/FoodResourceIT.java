@@ -31,7 +31,6 @@ import food.domain.Food;
 import food.repository.FoodRepository;
 import food.service.dto.FoodDTO;
 import food.service.mapper.FoodMapper;
-import food.web.rest.FoodResource;
 import food.web.util.TestUtil;
 
 /**
@@ -77,7 +76,8 @@ class FoodResourceIT {
 	 * they test an entity which requires the current entity.
 	 */
 	public static Food createEntity(EntityManager em) {
-		Food food = new Food().title(DEFAULT_TITLE).description(DEFAULT_DESCRIPTION).published(DEFAULT_PUBLISHED);
+		Food food = new Food().withTitle(DEFAULT_TITLE).withDescription(DEFAULT_DESCRIPTION)
+				.withPublished(DEFAULT_PUBLISHED);
 		return food;
 	}
 
@@ -88,7 +88,8 @@ class FoodResourceIT {
 	 * they test an entity which requires the current entity.
 	 */
 	public static Food createUpdatedEntity(EntityManager em) {
-		Food food = new Food().title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
+		Food food = new Food().withTitle(UPDATED_TITLE).withDescription(UPDATED_DESCRIPTION)
+				.withPublished(UPDATED_PUBLISHED);
 		return food;
 	}
 
@@ -200,7 +201,7 @@ class FoodResourceIT {
 		// Disconnect from session so that the updates on updatedFood are not directly
 		// saved in db
 		em.detach(updatedFood);
-		updatedFood.title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
+		updatedFood.withTitle(UPDATED_TITLE).withDescription(UPDATED_DESCRIPTION).withPublished(DEFAULT_PUBLISHED);
 		FoodDTO foodDTO = foodMapper.toDto(updatedFood);
 
 		restFoodMockMvc.perform(put(ENTITY_API_URL_ID, foodDTO.getId()).contentType(MediaType.APPLICATION_JSON)
@@ -281,7 +282,8 @@ class FoodResourceIT {
 		Food partialUpdatedFood = new Food();
 		partialUpdatedFood.setId(food.getId());
 
-		partialUpdatedFood.title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
+		partialUpdatedFood.withTitle(UPDATED_TITLE).withDescription(UPDATED_DESCRIPTION)
+				.withPublished(UPDATED_PUBLISHED);
 
 		restFoodMockMvc
 				.perform(
@@ -310,7 +312,8 @@ class FoodResourceIT {
 		Food partialUpdatedFood = new Food();
 		partialUpdatedFood.setId(food.getId());
 
-		partialUpdatedFood.title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
+		partialUpdatedFood.withTitle(UPDATED_TITLE).withDescription(UPDATED_DESCRIPTION)
+				.withPublished(UPDATED_PUBLISHED);
 
 		restFoodMockMvc
 				.perform(
