@@ -1,10 +1,12 @@
 package com.example.demo.domain;
 
-import java.io.Serializable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * A Food.
@@ -14,6 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Food implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -38,17 +41,21 @@ public class Food implements Serializable {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Food id(Long id) {
         this.setId(id);
         return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Food title(String title) {
@@ -56,12 +63,12 @@ public class Food implements Serializable {
         return this;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Food description(String description) {
@@ -69,21 +76,17 @@ public class Food implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Boolean getPublished() {
         return this.published;
+    }
+
+    public void setPublished(Boolean published) {
+        this.published = published;
     }
 
     public Food published(Boolean published) {
         this.setPublished(published);
         return this;
-    }
-
-    public void setPublished(Boolean published) {
-        this.published = published;
     }
 
     // amsdams-needle-entity-add-getters-setters - amsdams will add getters and setters here
@@ -109,10 +112,10 @@ public class Food implements Serializable {
     @Override
     public String toString() {
         return "Food{" +
-            "id=" + getId() +
-            ", title='" + getTitle() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", published='" + getPublished() + "'" +
-            "}";
+                "id=" + getId() +
+                ", title='" + getTitle() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", published='" + getPublished() + "'" +
+                "}";
     }
 }

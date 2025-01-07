@@ -1,10 +1,9 @@
 package com.example.demo.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import com.example.demo.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-import com.example.demo.web.rest.TestUtil;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FoodTest {
 

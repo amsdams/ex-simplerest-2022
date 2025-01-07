@@ -1,11 +1,9 @@
-
 package food.service.dto;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import food.web.util.TestUtil;
 import org.junit.jupiter.api.Test;
 
-import food.web.util.TestUtil;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FoodDTOTest {
 

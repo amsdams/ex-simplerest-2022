@@ -1,20 +1,19 @@
 package com.example.demo.service.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.demo.domain.Food;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.service.FoodService;
 import com.example.demo.service.dto.FoodDTO;
 import com.example.demo.service.mapper.FoodMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link Food}.
@@ -47,14 +46,14 @@ public class FoodServiceImpl implements FoodService {
         log.debug("Request to partially update Food : {}", foodDTO);
 
         return foodRepository
-            .findById(foodDTO.getId())
-            .map(existingFood -> {
-                foodMapper.partialUpdate(existingFood, foodDTO);
+                .findById(foodDTO.getId())
+                .map(existingFood -> {
+                    foodMapper.partialUpdate(existingFood, foodDTO);
 
-                return existingFood;
-            })
-            .map(foodRepository::save)
-            .map(foodMapper::toDto);
+                    return existingFood;
+                })
+                .map(foodRepository::save)
+                .map(foodMapper::toDto);
     }
 
     @Override

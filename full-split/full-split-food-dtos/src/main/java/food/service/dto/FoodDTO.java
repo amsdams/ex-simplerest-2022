@@ -1,14 +1,15 @@
 package food.service.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
-
-import jakarta.validation.constraints.NotNull;
 
 /**
  * A DTO for the {@link com.amsdams.ex.domain.Food} entity.
  */
+
 public class FoodDTO implements Serializable {
 
 	private Long id;
@@ -57,11 +58,10 @@ public class FoodDTO implements Serializable {
 		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof FoodDTO)) {
+		if (!(o instanceof FoodDTO foodDTO)) {
 			return false;
 		}
 
-		FoodDTO foodDTO = (FoodDTO) o;
 		if (this.id == null) {
 			return false;
 		}

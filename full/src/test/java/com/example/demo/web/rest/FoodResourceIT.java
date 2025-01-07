@@ -1,28 +1,12 @@
 package com.example.demo.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.example.demo.Crud1Application;
+import com.example.demo.domain.Food;
+import com.example.demo.repository.FoodRepository;
+import com.example.demo.service.dto.FoodDTO;
+import com.example.demo.service.mapper.FoodMapper;
 import jakarta.persistence.EntityManager;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,11 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.Crud1Application;
-import com.example.demo.domain.Food;
-import com.example.demo.repository.FoodRepository;
-import com.example.demo.service.dto.FoodDTO;
-import com.example.demo.service.mapper.FoodMapper;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link FoodResource} REST controller.
@@ -56,8 +43,8 @@ class FoodResourceIT {
     private static final String ENTITY_API_URL = "/api/foods";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong count = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private FoodRepository foodRepository;
@@ -75,7 +62,7 @@ class FoodResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -86,7 +73,7 @@ class FoodResourceIT {
 
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -107,13 +94,13 @@ class FoodResourceIT {
         // Create the Food
         FoodDTO foodDTO = foodMapper.toDto(food);
         restFoodMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
-            .andExpect(status().isCreated());
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
+                .andExpect(status().isCreated());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
         assertThat(foodList).hasSize(databaseSizeBeforeCreate + 1);
-        Food testFood = foodList.get(foodList.size() - 1);
+        Food testFood = foodList.getLast();
         assertThat(testFood.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testFood.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testFood.getPublished()).isEqualTo(DEFAULT_PUBLISHED);
@@ -130,8 +117,8 @@ class FoodResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restFoodMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
-            .andExpect(status().isBadRequest());
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -149,8 +136,8 @@ class FoodResourceIT {
         FoodDTO foodDTO = foodMapper.toDto(food);
 
         restFoodMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
-            .andExpect(status().isBadRequest());
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
+                .andExpect(status().isBadRequest());
 
         List<Food> foodList = foodRepository.findAll();
         assertThat(foodList).hasSize(databaseSizeBeforeTest);
@@ -164,13 +151,13 @@ class FoodResourceIT {
 
         // Get all the foodList
         restFoodMockMvc
-            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(food.getId().intValue())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].published").value(hasItem(DEFAULT_PUBLISHED.booleanValue())));
+                .perform(get(ENTITY_API_URL + "?sort=id,desc"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(food.getId().intValue())))
+                .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+                .andExpect(jsonPath("$.[*].published").value(hasItem(DEFAULT_PUBLISHED)));
     }
 
     @Test
@@ -181,13 +168,13 @@ class FoodResourceIT {
 
         // Get the food
         restFoodMockMvc
-            .perform(get(ENTITY_API_URL_ID, food.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(food.getId().intValue()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.published").value(DEFAULT_PUBLISHED.booleanValue()));
+                .perform(get(ENTITY_API_URL_ID, food.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id").value(food.getId().intValue()))
+                .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
+                .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+                .andExpect(jsonPath("$.published").value(DEFAULT_PUBLISHED));
     }
 
     @Test
@@ -213,17 +200,17 @@ class FoodResourceIT {
         FoodDTO foodDTO = foodMapper.toDto(updatedFood);
 
         restFoodMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, foodDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(foodDTO))
-            )
-            .andExpect(status().isOk());
+                .perform(
+                        put(ENTITY_API_URL_ID, foodDTO.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtil.convertObjectToJsonBytes(foodDTO))
+                )
+                .andExpect(status().isOk());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
         assertThat(foodList).hasSize(databaseSizeBeforeUpdate);
-        Food testFood = foodList.get(foodList.size() - 1);
+        Food testFood = foodList.getLast();
         assertThat(testFood.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testFood.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testFood.getPublished()).isEqualTo(UPDATED_PUBLISHED);
@@ -240,12 +227,12 @@ class FoodResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, foodDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(foodDTO))
-            )
-            .andExpect(status().isBadRequest());
+                .perform(
+                        put(ENTITY_API_URL_ID, foodDTO.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtil.convertObjectToJsonBytes(foodDTO))
+                )
+                .andExpect(status().isBadRequest());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -263,12 +250,12 @@ class FoodResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(foodDTO))
-            )
-            .andExpect(status().isBadRequest());
+                .perform(
+                        put(ENTITY_API_URL_ID, count.incrementAndGet())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtil.convertObjectToJsonBytes(foodDTO))
+                )
+                .andExpect(status().isBadRequest());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -286,8 +273,8 @@ class FoodResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
-            .andExpect(status().isMethodNotAllowed());
+                .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(foodDTO)))
+                .andExpect(status().isMethodNotAllowed());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -309,17 +296,17 @@ class FoodResourceIT {
         partialUpdatedFood.title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
 
         restFoodMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedFood.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedFood))
-            )
-            .andExpect(status().isOk());
+                .perform(
+                        patch(ENTITY_API_URL_ID, partialUpdatedFood.getId())
+                                .contentType("application/merge-patch+json")
+                                .content(TestUtil.convertObjectToJsonBytes(partialUpdatedFood))
+                )
+                .andExpect(status().isOk());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
         assertThat(foodList).hasSize(databaseSizeBeforeUpdate);
-        Food testFood = foodList.get(foodList.size() - 1);
+        Food testFood = foodList.getLast();
         assertThat(testFood.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testFood.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testFood.getPublished()).isEqualTo(UPDATED_PUBLISHED);
@@ -340,17 +327,17 @@ class FoodResourceIT {
         partialUpdatedFood.title(UPDATED_TITLE).description(UPDATED_DESCRIPTION).published(UPDATED_PUBLISHED);
 
         restFoodMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, partialUpdatedFood.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedFood))
-            )
-            .andExpect(status().isOk());
+                .perform(
+                        patch(ENTITY_API_URL_ID, partialUpdatedFood.getId())
+                                .contentType("application/merge-patch+json")
+                                .content(TestUtil.convertObjectToJsonBytes(partialUpdatedFood))
+                )
+                .andExpect(status().isOk());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
         assertThat(foodList).hasSize(databaseSizeBeforeUpdate);
-        Food testFood = foodList.get(foodList.size() - 1);
+        Food testFood = foodList.getLast();
         assertThat(testFood.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testFood.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testFood.getPublished()).isEqualTo(UPDATED_PUBLISHED);
@@ -367,12 +354,12 @@ class FoodResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, foodDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(foodDTO))
-            )
-            .andExpect(status().isBadRequest());
+                .perform(
+                        patch(ENTITY_API_URL_ID, foodDTO.getId())
+                                .contentType("application/merge-patch+json")
+                                .content(TestUtil.convertObjectToJsonBytes(foodDTO))
+                )
+                .andExpect(status().isBadRequest());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -390,12 +377,12 @@ class FoodResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, count.incrementAndGet())
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(foodDTO))
-            )
-            .andExpect(status().isBadRequest());
+                .perform(
+                        patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                                .contentType("application/merge-patch+json")
+                                .content(TestUtil.convertObjectToJsonBytes(foodDTO))
+                )
+                .andExpect(status().isBadRequest());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -413,8 +400,8 @@ class FoodResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFoodMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(foodDTO)))
-            .andExpect(status().isMethodNotAllowed());
+                .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(foodDTO)))
+                .andExpect(status().isMethodNotAllowed());
 
         // Validate the Food in the database
         List<Food> foodList = foodRepository.findAll();
@@ -431,8 +418,8 @@ class FoodResourceIT {
 
         // Delete the food
         restFoodMockMvc
-            .perform(delete(ENTITY_API_URL_ID, food.getId()).accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+                .perform(delete(ENTITY_API_URL_ID, food.getId()).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Food> foodList = foodRepository.findAll();

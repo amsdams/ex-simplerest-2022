@@ -1,57 +1,55 @@
 package food.config;
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.zalando.problem.jackson.ProblemModule;
 import org.zalando.problem.violations.ConstraintViolationProblemModule;
-
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import web.rest.errors.ExceptionTranslator;
 
 @Configuration
 public class JacksonConfiguration {
 
-	/**
-	 * Support for Java date and time API.
-	 * 
-	 * @return the corresponding Jackson module.
-	 */
-	@Bean
-	public JavaTimeModule javaTimeModule() {
-		return new JavaTimeModule();
-	}
+    @Autowired
+    Environment env;
 
-	@Bean
-	public Jdk8Module jdk8TimeModule() {
-		return new Jdk8Module();
-	}
+    /**
+     * Support for Java date and time API.
+     *
+     * @return the corresponding Jackson module.
+     */
+    @Bean
+    public JavaTimeModule javaTimeModule() {
+        return new JavaTimeModule();
+    }
 
-	/*
-	 * Module for serialization/deserialization of RFC7807 Problem.
-	 */
-	@Bean
-	public ProblemModule problemModule() {
-		return new ProblemModule();
-	}
+    @Bean
+    public Jdk8Module jdk8TimeModule() {
+        return new Jdk8Module();
+    }
 
-	/*
-	 * Module for serialization/deserialization of ConstraintViolationProblem.
-	 */
-	@Bean
-	public ConstraintViolationProblemModule constraintViolationProblemModule() {
-		return new ConstraintViolationProblemModule();
-	}
+    /*
+     * Module for serialization/deserialization of RFC7807 Problem.
+     */
+    @Bean
+    public ProblemModule problemModule() {
+        return new ProblemModule();
+    }
 
-	@Autowired
-	Environment env;
+    /*
+     * Module for serialization/deserialization of ConstraintViolationProblem.
+     */
+    @Bean
+    public ConstraintViolationProblemModule constraintViolationProblemModule() {
+        return new ConstraintViolationProblemModule();
+    }
 
-	@Bean
-	ExceptionTranslator exceptionHandler() {
+    @Bean
+    ExceptionTranslator exceptionHandler() {
 
-		return new ExceptionTranslator(env);
-	}
+        return new ExceptionTranslator(env);
+    }
 }

@@ -1,9 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.service.dto.FoodDTO;
+
 import java.util.List;
 import java.util.Optional;
-
-import com.example.demo.service.dto.FoodDTO;
 
 /**
  * Service Interface for managing {@link com.amsdams.ex.domain.Food}.
