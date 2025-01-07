@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.service.mapper.FoodMapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.problem.jackson.ProblemModule;
@@ -13,6 +15,7 @@ public class JacksonConfiguration {
 
     /**
      * Support for Java date and time API.
+     *
      * @return the corresponding Jackson module.
      */
     @Bean
@@ -26,6 +29,10 @@ public class JacksonConfiguration {
     }
 
 
+    /*@Bean
+    public FoodMapper foodMapper() {
+        return Mappers.getMapper(FoodMapper.class);
+    }*/
 
     /*
      * Module for serialization/deserialization of RFC7807 Problem.

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ import com.example.demo.web.util.HeaderUtil;
 import com.example.demo.web.util.ResponseUtil;
 
 /**
- * REST controller for managing {@link com.amsdams.ex.domain.Food}.
+ * REST controller for managing {@link com.example.demo.domain.Food}.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,7 +42,7 @@ public class FoodResource {
 
     private static final String ENTITY_NAME = "food";
 
-    @Value("${amsdams.clientApp.name}")
+    @Value("${amsdams.clientApp.name}:bla")
     private String applicationName;
 
     private final FoodService foodService;

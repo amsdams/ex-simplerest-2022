@@ -8,5 +8,6 @@ import com.example.demo.service.dto.FoodDTO;
 /**
  * Mapper for the entity {@link Food} and its DTO {@link FoodDTO}.
  */
-@Mapper(componentModel = "spring", uses = {})
-public interface FoodMapper extends EntityMapper<FoodDTO, Food> {}
+@Mapper(componentModel = "spring")
+public interface FoodMapper extends EntityMapper<FoodDTO, Food> {
+}

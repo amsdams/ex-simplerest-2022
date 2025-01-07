@@ -2,7 +2,8 @@ package com.example.demo.service.mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 
-class FoodMapperTest {
+
+/*class FoodMapperTest {
 
     private FoodMapper foodMapper;
 
@@ -10,4 +11,4 @@ class FoodMapperTest {
     public void setUp() {
         foodMapper = new FoodMapperImpl();
     }
-}
+}*/

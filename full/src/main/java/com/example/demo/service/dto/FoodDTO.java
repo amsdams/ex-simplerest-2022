@@ -3,7 +3,7 @@ package com.example.demo.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * A DTO for the {@link com.amsdams.ex.domain.Food} entity.
